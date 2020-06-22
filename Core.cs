@@ -10,13 +10,13 @@ namespace LemulatorU.Core
 {
     class VM
     {
-        async void Execute(string path)
+        public static async void Execute(string path)
         {
             AssemblyDef asmDef = AssemblyDef.Load(path);
             await ExecuteMethod(asmDef.Modules[0].EntryPoint);
         }
 
-        int GetInstructionIndex(uint offset, IList<Instruction> instructions)
+        static int GetInstructionIndex(uint offset, IList<Instruction> instructions)
         {
             for (int i = 0; i < instructions.Count; i++)
             {
@@ -27,7 +27,7 @@ namespace LemulatorU.Core
         }
 
         /* Function to execute the instructions of a method */
-        async Task<object> ExecuteMethod(MethodDef mdef)
+        static async Task<object> ExecuteMethod(MethodDef mdef)
         {
             /* Initialize a locals array (as dnlib is strange, we have to do this) */
             object[] Locals = new object[mdef.Body.Variables.Count];
@@ -111,7 +111,7 @@ namespace LemulatorU.Core
         }
 
         /* Function to run members in a virtualized environment (register functions to prevent exploits) */
-        async Task<object> ExecuteMember(MemberRef mref, object[] arguments)
+        static async Task<object> ExecuteMember(MemberRef mref, object[] arguments)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -157,7 +157,7 @@ namespace LemulatorU.Core
         }
 
         /* Convert member's parameters into arguments (items from the stack) */
-        object[] ParametersToArguments(MemberRef mref, Stack<object> stack)
+        static object[] ParametersToArguments(MemberRef mref, Stack<object> stack)
         {
             object[] Arguments = new object[mref.GetParamCount()];
             for (int x = 0; x < mref.GetParamCount(); x++)
